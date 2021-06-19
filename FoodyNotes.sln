@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodyNotes.Infrastructure.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodyNotes.DataAccess.MsSql", "FoodyNotes.DataAccess.MsSql\FoodyNotes.DataAccess.MsSql.csproj", "{A188AF31-A90F-4194-BC99-57CEC80202AE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 Utils", "0 Utils", "{DE96449A-DDD9-4667-A537-E32E62FD0E4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,8 @@ Global
 		{A188AF31-A90F-4194-BC99-57CEC80202AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A188AF31-A90F-4194-BC99-57CEC80202AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A188AF31-A90F-4194-BC99-57CEC80202AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F77AA2F-89E0-4332-AA0C-147C57715D00} = {DE96449A-DDD9-4667-A537-E32E62FD0E4C}
 	EndGlobalSection
 EndGlobal
