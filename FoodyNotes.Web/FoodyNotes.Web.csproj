@@ -5,11 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Google.Apis.Auth" Version="1.52.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
+        <ProjectReference Include="..\FoodyNotes.DataAccess\FoodyNotes.DataAccess.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.Infrastructure.Implementation\FoodyNotes.Infrastructure.Implementation.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.Infrastructure.Interfaces\FoodyNotes.Infrastructure.Interfaces.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.UseCases\FoodyNotes.UseCases.csproj"/>
     </ItemGroup>
 
 </Project>
