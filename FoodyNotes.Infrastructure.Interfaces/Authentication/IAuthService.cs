@@ -1,11 +1,13 @@
-using FoodyNotes.Entities.Entities;
+using FoodyNotes.Entities.Authentication.Entities;
+using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 
 namespace FoodyNotes.Infrastructure.Interfaces.Authentication
 {
   public interface IAuthService
   {
+    AuthenticateOutDto Authenticate(AuthenticateInDto model, string ipAddress);
     string GetUserIdFromJwtToken(string token);
 
-    AuthUser GetUserById(string userId);
+    User GetUserById(string userId);
   }
 }

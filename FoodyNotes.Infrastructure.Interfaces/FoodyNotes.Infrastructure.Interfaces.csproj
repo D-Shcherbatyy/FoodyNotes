@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7" />
     </ItemGroup>
 
 </Project>

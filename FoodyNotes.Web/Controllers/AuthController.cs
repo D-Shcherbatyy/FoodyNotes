@@ -1,9 +1,8 @@
-using System;
-using FoodyNotes.Infrastructure.Interfaces.Authentication.Tokens;
+using FoodyNotes.Infrastructure.Interfaces.Authentication;
+using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.Web.Attributes;
 using FoodyNotes.Web.Models;
-using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http;
+using FoodyNotes.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodyNotes.Web.Controllers
@@ -12,25 +11,27 @@ namespace FoodyNotes.Web.Controllers
   [ApiController]
   public class AuthController : ControllerBase
   {
+    private readonly IAuthService _authService;
     private readonly ITokenService _tokenService;
+    private readonly HttpService _httpService;
 
-    public AuthController(ITokenService tokenService)
+    public AuthController(IAuthService authService, ITokenService tokenService, HttpService httpService)
     {
+      _authService = authService;
       _tokenService = tokenService;
+      _httpService = httpService;
     }
+    
+    private string IpAddress => _httpService.GetIpAddress(Request, HttpContext);
 
     [HttpPost("authenticate")]
-    public IActionResult Authenticate([FromBody] AuthenticateRequest data)
+    public IActionResult Authenticate([FromBody] AuthenticateInDto model)
     {
-      var settings = new GoogleJsonWebSignature.ValidationSettings
-      {
-        Audience = new[] { "674537541571-4q73096qq9tj9fimnuehdeefl5po6n0f.apps.googleusercontent.com" }
-      };
-
-      var payload = GoogleJsonWebSignature.ValidateAsync(data.IdToken, settings).Result;
-
-      //todo: add internal authentication here
-      return Ok(payload);
+      var response = _authService.Authenticate(model, IpAddress);
+      
+      _httpService.SetTokenCookie(Response, response.RefreshToken);
+      
+      return Ok(response);
     }
 
     [AllowAnonymous]
@@ -38,8 +39,8 @@ namespace FoodyNotes.Web.Controllers
     public IActionResult RefreshToken()
     {
       var refreshToken = Request.Cookies["refreshToken"];
-      var response = _tokenService.RefreshToken(refreshToken, GetIpAddress());
-      SetTokenCookie(response.RefreshToken);
+      var response = _tokenService.RefreshToken(refreshToken, IpAddress);
+      _httpService.SetTokenCookie(Response, response.RefreshToken);
 
       return Ok(response);
     }
@@ -53,29 +54,9 @@ namespace FoodyNotes.Web.Controllers
       if (string.IsNullOrEmpty(token))
         return BadRequest(new { message = "Token is required" });
 
-      _tokenService.RevokeToken(token, GetIpAddress());
+      _tokenService.RevokeToken(token, IpAddress);
 
       return Ok(new { message = "Token revoked" });
-    }
-
-    private void SetTokenCookie(string refreshToken)
-    {
-      // append cookie with refresh token to the http response
-      var cookieOptions = new CookieOptions
-      {
-        HttpOnly = true,
-        Expires = DateTime.UtcNow.AddDays(7)
-      };
-      Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
-    }
-
-    private string GetIpAddress()
-    {
-      // get source ip address for the current request
-      if (Request.Headers.ContainsKey("X-Forwarded-For"))
-        return Request.Headers["X-Forwarded-For"];
-
-      return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
     }
 
   }

@@ -24,10 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Controllers", "3 Controll
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Frameworks", "4 Frameworks", "{2351B5F1-3884-42F2-913F-BBED9B856270}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 Utils", "0 Utils", "{DE96449A-DDD9-4667-A537-E32E62FD0E4C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Core", "1 Core", "{EF3B3EDF-7B00-43A7-935B-AA61554C127F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

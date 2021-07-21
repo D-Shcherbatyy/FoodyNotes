@@ -1,13 +1,18 @@
-using FoodyNotes.Entities.Entities;
+using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodyNotes.DataAccess.MsSql
 {
-  public class ApplicationDbContext : DbContext, IApplicationDbContext
+  public class ApplicationDbContext : DbContext, IDbContext
   {
-    public DbSet<AuthUser> AuthUsers { get; set; }
     public DbSet<User> Users { get; set; }
+    public int UpdateAndSaveUser(User user)
+    {
+      Update(user);
+      return SaveChanges();
+    }
 
     public ApplicationDbContext()
     {

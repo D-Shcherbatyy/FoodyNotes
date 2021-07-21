@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using FoodyNotes.Entities.Entities;
+using FoodyNotes.Entities.Authentication.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -19,7 +19,7 @@ namespace FoodyNotes.Web.Attributes
         return;
 
       // authorization
-      var user = (AuthUser)context.HttpContext.Items["User"];
+      var user = (User)context.HttpContext.Items["User"];
 
       if (user == null)
         context.Result = new JsonResult(new { message = "Unauthorized" })

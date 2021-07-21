@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using FoodyNotes.Entities.Enums;
+using FoodyNotes.Entities.Authentication.Enums;
 
-namespace FoodyNotes.Entities.Entities
+namespace FoodyNotes.Entities.Authentication.Entities
 {
-  public class AuthUser
+  public class User
   {
     public string Id { get; set; }
     public Role[] Roles { get; set; }

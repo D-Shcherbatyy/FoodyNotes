@@ -1,32 +1,33 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using FoodyNotes.DataAccess.MsSql;
-using FoodyNotes.Entities.Entities;
-using FoodyNotes.Infrastructure.Implementation.Exceptions;
+using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
-using FoodyNotes.Infrastructure.Interfaces.Authentication.Tokens;
+using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
+using FoodyNotes.UseCases.Exceptions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
+namespace FoodyNotes.Infrastructure.Implementation
 {
   public class TokenService : ITokenService
   {
     private readonly AppSettings _appSettings;
-    private readonly ApplicationDbContext _context;
+    private readonly IDbContext _context;
 
-    public TokenService(IOptions<AppSettings> appSettings, IApplicationDbContext context)
+    public TokenService(IOptions<AppSettings> appSettings, IDbContext context)
     {
       _appSettings = appSettings.Value;
-      _context = context as ApplicationDbContext;
+      _context = context;
     }
 
-    public IAuthenticateResponse RefreshToken(string token, string ipAddress)
+    public AuthenticateOutDto RefreshToken(string token, string ipAddress)
     {
       var user = GetUserByRefreshToken(token);
       var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
@@ -36,8 +37,8 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
         // revoke all descendant tokens in case this token has been compromised
         RevokeDescendantRefreshTokens(refreshToken, user, ipAddress,
           $"Attempted reuse of revoked ancestor token: {token}");
-        _context.Update(user);
-        _context.SaveChanges();
+        
+        _context.UpdateAndSaveUser(user);
       }
 
       if (!refreshToken.IsActive)
@@ -51,13 +52,12 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
       RemoveOldRefreshTokens(user);
 
       // save changes to db
-      _context.Update(user);
-      _context.SaveChanges();
+      _context.UpdateAndSaveUser(user);
 
       // generate new jwt
       var jwtToken = GenerateJwtToken(user);
 
-      return new AuthenticateResponse(user, jwtToken, newRefreshToken.Token);
+      return new AuthenticateOutDto(user, jwtToken, newRefreshToken.Token);
     }
 
     public void RevokeToken(string token, string ipAddress)
@@ -70,11 +70,10 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
 
       // revoke token and save
       RevokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
-      _context.Update(user);
-      _context.SaveChanges();
+      _context.UpdateAndSaveUser(user);
     }
 
-    private string GenerateJwtToken(AuthUser user)
+    public string GenerateJwtToken(User user)
     {
       // generate token that is valid for 15 minutes
       var tokenHandler = new JwtSecurityTokenHandler();
@@ -83,15 +82,14 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
       {
         Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id) }),
         Expires = DateTime.UtcNow.AddMinutes(15),
-        SigningCredentials =
-          new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
       };
       var token = tokenHandler.CreateToken(tokenDescriptor);
 
       return tokenHandler.WriteToken(token);
     }
 
-    private RefreshToken GenerateRefreshToken(string ipAddress)
+    public RefreshToken GenerateRefreshToken(string ipAddress)
     {
       // generate token that is valid for 7 days
       using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
@@ -108,9 +106,46 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
       return refreshToken;
     }
 
-    private AuthUser GetUserByRefreshToken(string token)
+    public void RemoveOldRefreshTokens(User user)
     {
-      var user = _context.AuthUsers.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+      // remove old inactive refresh tokens from user based on TTL in app settings
+      user.RefreshTokens.RemoveAll(x =>
+        !x.IsActive &&
+        x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
+    }
+    
+    public IEnumerable<Claim> GetClaimsByToken(string token)
+    {
+      if (token == null)
+        return null;
+
+      var tokenHandler = new JwtSecurityTokenHandler();
+      var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+      try
+      {
+        tokenHandler.ValidateToken(token, new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(key),
+          ValidateIssuer = false,
+          ValidateAudience = false,
+          // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+          ClockSkew = TimeSpan.Zero
+        }, out var validatedToken);
+
+        return ((JwtSecurityToken)validatedToken).Claims;
+      }
+      catch
+      {
+        // return null if validation fails
+        return null;
+      }
+    }
+
+    private User GetUserByRefreshToken(string token)
+    {
+      var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
 
       if (user == null)
         throw new AppException("Invalid token");
@@ -126,15 +161,7 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication.Tokens
       return newRefreshToken;
     }
 
-    private void RemoveOldRefreshTokens(AuthUser user)
-    {
-      // remove old inactive refresh tokens from user based on TTL in app settings
-      user.RefreshTokens.RemoveAll(x =>
-        !x.IsActive &&
-        x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
-    }
-
-    private void RevokeDescendantRefreshTokens(RefreshToken refreshToken, AuthUser user, string ipAddress,
+    private void RevokeDescendantRefreshTokens(RefreshToken refreshToken, User user, string ipAddress,
       string reason)
     {
       // recursively traverse the refresh token chain and ensure all descendants are revoked

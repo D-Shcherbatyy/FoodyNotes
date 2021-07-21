@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
+using FoodyNotes.Entities.Authentication.Entities;
 
-namespace FoodyNotes.Infrastructure.Interfaces.Authentication
+namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
 {
-  public interface IAuthenticateResponse
+  public class AuthenticateOutDto
   {
     public string Id { get; set; }
     public string FirstName { get; set; }
@@ -12,5 +13,12 @@ namespace FoodyNotes.Infrastructure.Interfaces.Authentication
 
     [JsonIgnore] // refresh token is returned in http only cookie
     public string RefreshToken { get; set; }
+
+    public AuthenticateOutDto(User user, string jwtToken, string refreshToken)
+    {
+      Id = user.Id;
+      JwtToken = jwtToken;
+      RefreshToken = refreshToken;
+    }
   }
 }

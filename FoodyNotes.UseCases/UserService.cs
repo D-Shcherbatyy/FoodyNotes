@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using FoodyNotes.Entities.Entities;
+using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 
 namespace FoodyNotes.UseCases
 {
   public class UserService : IUserService
   {
-    private readonly IApplicationDbContext _context;
+    private readonly IDbContext _context;
 
-    public UserService(IApplicationDbContext context)
+    public UserService(IDbContext context)
     {
       _context = context;
 

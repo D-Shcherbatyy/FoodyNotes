@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 namespace FoodyNotes.Web.Middlewares
@@ -27,6 +28,14 @@ namespace FoodyNotes.Web.Middlewares
       }
 
       await _next(context);
+    }
+  }
+  
+  public static class JwtMiddlewareExtensions
+  {
+    public static IApplicationBuilder UseJwtMiddleware(this IApplicationBuilder builder)
+    {
+      return builder.UseMiddleware<JwtMiddleware>();
     }
   }
 

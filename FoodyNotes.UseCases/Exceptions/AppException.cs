@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace FoodyNotes.Infrastructure.Implementation.Exceptions
+namespace FoodyNotes.UseCases.Exceptions
 {
   // custom exception class for throwing application specific exceptions (e.g. for validation) 
   // that can be caught and handled within the application

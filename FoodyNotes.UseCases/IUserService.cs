@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using FoodyNotes.Entities.Entities;
+using FoodyNotes.Entities.Authentication.Entities;
 
 namespace FoodyNotes.UseCases
 {

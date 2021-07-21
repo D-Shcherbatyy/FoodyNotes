@@ -5,8 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj"/>
-        <ProjectReference Include="..\FoodyNotes.Infrastructure.Interfaces\FoodyNotes.Infrastructure.Interfaces.csproj"/>
+        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj" />
+        <ProjectReference Include="..\FoodyNotes.Infrastructure.Interfaces\FoodyNotes.Infrastructure.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Authentication" />
     </ItemGroup>
 
 </Project>

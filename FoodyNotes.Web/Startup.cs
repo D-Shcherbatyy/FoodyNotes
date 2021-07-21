@@ -1,12 +1,10 @@
 using FoodyNotes.DataAccess.MsSql;
 using FoodyNotes.Infrastructure.Implementation;
-using FoodyNotes.Infrastructure.Implementation.Authentication;
-using FoodyNotes.Infrastructure.Implementation.Authentication.Tokens;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
-using FoodyNotes.Infrastructure.Interfaces.Authentication.Tokens;
 using FoodyNotes.UseCases;
 using FoodyNotes.Web.Middlewares;
+using FoodyNotes.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,14 +25,15 @@ namespace FoodyNotes.Web
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<IApplicationDbContext, ApplicationDbContext>();
+      services.AddDbContext<IDbContext, ApplicationDbContext>();
       services.AddCors();
 
       services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
+      
       services.AddScoped<IUserService, UserService>();
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<HttpService>();
 
       services.AddControllers();
 
@@ -65,7 +64,7 @@ namespace FoodyNotes.Web
         .AllowCredentials());
 
       //app.UseAuthorization(); - our authorization is based on IAuthorizationFilter
-      app.UseMiddleware<JwtMiddleware>();
+      app.UseJwtMiddleware();
 
       app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
