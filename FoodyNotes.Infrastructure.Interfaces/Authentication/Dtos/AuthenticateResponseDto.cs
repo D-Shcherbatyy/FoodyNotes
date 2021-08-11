@@ -3,7 +3,7 @@ using FoodyNotes.Entities.Authentication.Entities;
 
 namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
 {
-  public class AuthenticateOutDto
+  public class AuthenticateResponseDto
   {
     public string Id { get; set; }
     public string FirstName { get; set; }
@@ -14,7 +14,7 @@ namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
     [JsonIgnore] // refresh token is returned in http only cookie
     public string RefreshToken { get; set; }
 
-    public AuthenticateOutDto(User user, string jwtToken, string refreshToken)
+    public AuthenticateResponseDto(User user, string jwtToken, string refreshToken)
     {
       Id = user.Id;
       JwtToken = jwtToken;

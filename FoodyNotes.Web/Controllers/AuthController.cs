@@ -1,8 +1,11 @@
+using System.Threading.Tasks;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
+using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.Web.Attributes;
 using FoodyNotes.Web.Models;
 using FoodyNotes.Web.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodyNotes.Web.Controllers
@@ -11,12 +14,14 @@ namespace FoodyNotes.Web.Controllers
   [ApiController]
   public class AuthController : ControllerBase
   {
+    private readonly IMediator _mediator;
     private readonly IAuthService _authService;
     private readonly ITokenService _tokenService;
     private readonly HttpService _httpService;
 
-    public AuthController(IAuthService authService, ITokenService tokenService, HttpService httpService)
+    public AuthController(IMediator mediator, IAuthService authService, ITokenService tokenService, HttpService httpService)
     {
+      _mediator = mediator;
       _authService = authService;
       _tokenService = tokenService;
       _httpService = httpService;
@@ -25,9 +30,10 @@ namespace FoodyNotes.Web.Controllers
     private string IpAddress => _httpService.GetIpAddress(Request, HttpContext);
 
     [HttpPost("authenticate")]
-    public IActionResult Authenticate([FromBody] AuthenticateInDto model)
+    public async Task<IActionResult> Authenticate([FromBody] AuthenticateRequestDto model)
     {
-      var response = _authService.Authenticate(model, IpAddress);
+      var response = await _mediator.Send(new AuthenticateCommand { RequestDto = model, IpAddress = IpAddress });
+      //var response = await _authService.Authenticate(model, IpAddress);
       
       _httpService.SetTokenCookie(Response, response.RefreshToken);
       
@@ -42,7 +48,7 @@ namespace FoodyNotes.Web.Controllers
       var response = _tokenService.RefreshToken(refreshToken, IpAddress);
       _httpService.SetTokenCookie(Response, response.RefreshToken);
 
-      return Ok(response);
+      return Ok();
     }
 
     [HttpPost("revoke-token")]

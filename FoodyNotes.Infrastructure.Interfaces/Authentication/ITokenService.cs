@@ -7,7 +7,7 @@ namespace FoodyNotes.Infrastructure.Interfaces.Authentication
 {
   public interface ITokenService
   {
-    AuthenticateOutDto RefreshToken(string token, string ipAddress);
+    AuthenticateResponseDto RefreshToken(string token, string ipAddress);
     void RevokeToken(string token, string ipAddress);
     string GenerateJwtToken(User user);
     RefreshToken GenerateRefreshToken(string ipAddress);

@@ -6,11 +6,13 @@ namespace FoodyNotes.Web.Controllers
 {
 
   [Authorize]
-  public class UserController : ControllerBase
+  [Route("api/[controller]")]
+  [ApiController]
+  public class UsersController : ControllerBase
   {
     private readonly IUserService _userService;
 
-    public UserController(IUserService userService)
+    public UsersController(IUserService userService)
     {
       _userService = userService;
     }

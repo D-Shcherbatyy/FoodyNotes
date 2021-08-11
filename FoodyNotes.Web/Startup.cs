@@ -3,8 +3,10 @@ using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases;
+using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.Web.Middlewares;
 using FoodyNotes.Web.Services;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +35,11 @@ namespace FoodyNotes.Web
       services.AddScoped<IUserService, UserService>();
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<IGoogleService, GoogleService>();
       services.AddScoped<HttpService>();
 
+      services.AddMediatR(typeof(AuthenticateCommand));
+      
       services.AddControllers();
 
       services.AddSwaggerGen(c =>

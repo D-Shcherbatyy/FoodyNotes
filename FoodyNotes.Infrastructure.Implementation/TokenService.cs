@@ -27,7 +27,7 @@ namespace FoodyNotes.Infrastructure.Implementation
       _context = context;
     }
 
-    public AuthenticateOutDto RefreshToken(string token, string ipAddress)
+    public AuthenticateResponseDto RefreshToken(string token, string ipAddress)
     {
       var user = GetUserByRefreshToken(token);
       var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
@@ -57,7 +57,7 @@ namespace FoodyNotes.Infrastructure.Implementation
       // generate new jwt
       var jwtToken = GenerateJwtToken(user);
 
-      return new AuthenticateOutDto(user, jwtToken, newRefreshToken.Token);
+      return new AuthenticateResponseDto(user, jwtToken, newRefreshToken.Token);
     }
 
     public void RevokeToken(string token, string ipAddress)
