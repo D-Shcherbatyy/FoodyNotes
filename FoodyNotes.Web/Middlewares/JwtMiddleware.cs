@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,15 +15,15 @@ namespace FoodyNotes.Web.Middlewares
       _next = next;
     }
 
-    public async Task Invoke(HttpContext context, IAuthService authService, IUserService userService)
+    public async Task Invoke(HttpContext context, IUserService userService)
     {
       var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-      var userId = authService.GetUserIdFromJwtToken(token);
+      var userId = userService.GetUserIdFromJwtToken(token);
 
       if (userId != null)
       {
         // attach user to context on successful jwt validation
-        context.Items["User"] = authService.GetUserById(userId);
+        context.Items["User"] = userService.GetById(userId);
       }
 
       await _next(context);

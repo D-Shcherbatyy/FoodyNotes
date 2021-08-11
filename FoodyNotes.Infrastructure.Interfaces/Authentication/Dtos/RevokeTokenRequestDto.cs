@@ -1,6 +1,6 @@
 namespace FoodyNotes.Web.Models
 {
-  public class RevokeTokenRequest
+  public class RevokeTokenRequestDto
   {
     public string Token { get; set; }
   }

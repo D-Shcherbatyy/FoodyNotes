@@ -15,14 +15,12 @@ namespace FoodyNotes.Web.Controllers
   public class AuthController : ControllerBase
   {
     private readonly IMediator _mediator;
-    private readonly IAuthService _authService;
     private readonly ITokenService _tokenService;
     private readonly HttpService _httpService;
 
-    public AuthController(IMediator mediator, IAuthService authService, ITokenService tokenService, HttpService httpService)
+    public AuthController(IMediator mediator, ITokenService tokenService, HttpService httpService)
     {
       _mediator = mediator;
-      _authService = authService;
       _tokenService = tokenService;
       _httpService = httpService;
     }
@@ -33,7 +31,6 @@ namespace FoodyNotes.Web.Controllers
     public async Task<IActionResult> Authenticate([FromBody] AuthenticateRequestDto model)
     {
       var response = await _mediator.Send(new AuthenticateCommand { RequestDto = model, IpAddress = IpAddress });
-      //var response = await _authService.Authenticate(model, IpAddress);
       
       _httpService.SetTokenCookie(Response, response.RefreshToken);
       
@@ -42,25 +39,27 @@ namespace FoodyNotes.Web.Controllers
 
     [AllowAnonymous]
     [HttpPost("refresh-token")]
-    public IActionResult RefreshToken()
+    public async Task<IActionResult> RefreshToken()
     {
       var refreshToken = Request.Cookies["refreshToken"];
-      var response = _tokenService.RefreshToken(refreshToken, IpAddress);
-      _httpService.SetTokenCookie(Response, response.RefreshToken);
 
-      return Ok();
+      var response = await _mediator.Send(new RefreshTokenCommand { CurrentRefreshToken = refreshToken, IpAddress = IpAddress });
+
+      _httpService.SetTokenCookie(Response, response.RefreshToken.Token);
+
+      return Ok(response.JwtToken);
     }
 
     [HttpPost("revoke-token")]
-    public IActionResult RevokeToken(RevokeTokenRequest model)
+    public async Task<IActionResult> RevokeToken(RevokeTokenRequestDto model)
     {
       // accept refresh token in request body or cookie
-      var token = model.Token ?? Request.Cookies["refreshToken"];
+      var refreshToken = model.Token ?? Request.Cookies["refreshToken"];
 
-      if (string.IsNullOrEmpty(token))
+      if (string.IsNullOrEmpty(refreshToken))
         return BadRequest(new { message = "Token is required" });
 
-      _tokenService.RevokeToken(token, IpAddress);
+      await _mediator.Send(new RevokeTokenCommand { RefreshToken = refreshToken, IpAddress = IpAddress });
 
       return Ok(new { message = "Token revoked" });
     }

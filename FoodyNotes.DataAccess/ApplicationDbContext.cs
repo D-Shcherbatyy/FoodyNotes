@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodyNotes.DataAccess.MsSql
 {

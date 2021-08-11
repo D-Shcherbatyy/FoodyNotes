@@ -7,5 +7,6 @@ namespace FoodyNotes.UseCases
   {
     User GetById(string id);
     IEnumerable<User> GetAll();
+    string GetUserIdFromJwtToken(string token);
   }
 }

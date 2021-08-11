@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodyNotes.Infrastructure.Interfaces
 {

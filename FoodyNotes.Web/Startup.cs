@@ -34,7 +34,6 @@ namespace FoodyNotes.Web
       
       services.AddScoped<IUserService, UserService>();
       services.AddScoped<ITokenService, TokenService>();
-      services.AddScoped<IAuthService, AuthService>();
       services.AddScoped<IGoogleService, GoogleService>();
       services.AddScoped<HttpService>();
 
