@@ -9,12 +9,12 @@ namespace FoodyNotes.UseCases
   public class UserService : IUserService
   {
     private readonly IDbContext _context;
-    private readonly ITokenService _tokenService;
+    private readonly IJwtTokenService _jwtTokenService;
 
-    public UserService(IDbContext context, ITokenService tokenService)
+    public UserService(IDbContext context, IJwtTokenService jwtTokenService)
     {
       _context = context;
-      _tokenService = tokenService;
+      _jwtTokenService = jwtTokenService;
 
     }
 
@@ -35,7 +35,7 @@ namespace FoodyNotes.UseCases
 
     public string GetUserIdFromJwtToken(string token)
     {
-      return _tokenService.GetClaimsByToken(token)?.First(x => x.Type == "id").Value;
+      return _jwtTokenService.GetClaimsByToken(token)?.First(x => x.Type == "id").Value;
     }
   }
 }

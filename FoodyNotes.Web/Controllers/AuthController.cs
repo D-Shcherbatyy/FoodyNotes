@@ -15,13 +15,13 @@ namespace FoodyNotes.Web.Controllers
   public class AuthController : ControllerBase
   {
     private readonly IMediator _mediator;
-    private readonly ITokenService _tokenService;
+    private readonly IJwtTokenService _jwtTokenService;
     private readonly HttpService _httpService;
 
-    public AuthController(IMediator mediator, ITokenService tokenService, HttpService httpService)
+    public AuthController(IMediator mediator, IJwtTokenService jwtTokenService, HttpService httpService)
     {
       _mediator = mediator;
-      _tokenService = tokenService;
+      _jwtTokenService = jwtTokenService;
       _httpService = httpService;
     }
     

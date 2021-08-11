@@ -1,44 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases.Exceptions;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FoodyNotes.Infrastructure.Implementation
 {
-  public class TokenService : ITokenService
+  public class RefreshTokenService : IRefreshTokenService
   {
     private readonly AppSettings _appSettings;
     private readonly IDbContext _context;
 
-    public TokenService(IOptions<AppSettings> appSettings, IDbContext context)
+    public RefreshTokenService(IOptions<AppSettings> appSettings, IDbContext context)
     {
       _appSettings = appSettings.Value;
       _context = context;
-    }
-
-    public string GenerateJwtToken(User user)
-    {
-      // generate token that is valid for 15 minutes
-      var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-      var tokenDescriptor = new SecurityTokenDescriptor
-      {
-        Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id) }),
-        Expires = DateTime.UtcNow.AddMinutes(15),
-        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-      };
-      var token = tokenHandler.CreateToken(tokenDescriptor);
-
-      return tokenHandler.WriteToken(token);
     }
 
     public RefreshToken GenerateRefreshToken(string ipAddress)
@@ -64,35 +43,6 @@ namespace FoodyNotes.Infrastructure.Implementation
       user.RefreshTokens.RemoveAll(x =>
         !x.IsActive &&
         x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
-    }
-    
-    public IEnumerable<Claim> GetClaimsByToken(string token)
-    {
-      if (token == null)
-        return null;
-
-      var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-
-      try
-      {
-        tokenHandler.ValidateToken(token, new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(key),
-          ValidateIssuer = false,
-          ValidateAudience = false,
-          // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-          ClockSkew = TimeSpan.Zero
-        }, out var validatedToken);
-
-        return ((JwtSecurityToken)validatedToken).Claims;
-      }
-      catch
-      {
-        // return null if validation fails
-        return null;
-      }
     }
 
     public User GetUserByRefreshToken(string token)

@@ -14,13 +14,18 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
   public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, AuthenticateResponseDto>
   {
     private readonly IDbContext _dbContext;
-    private readonly ITokenService _tokenService;
+    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
     private readonly IGoogleService _googleService;
 
-    public AuthenticateCommandHandler(IDbContext dbContext, ITokenService tokenService, IGoogleService googleService)
+    public AuthenticateCommandHandler(IDbContext dbContext,
+      IJwtTokenService jwtTokenService,
+      IRefreshTokenService refreshTokenService,
+      IGoogleService googleService)
     {
       _dbContext = dbContext;
-      _tokenService = tokenService;
+      _jwtTokenService = jwtTokenService;
+      _refreshTokenService = refreshTokenService;
       _googleService = googleService;
     }
     
@@ -32,7 +37,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
       
       var user = _dbContext.Users.SingleOrDefault(x => x.Id == userId);
       
-      var refreshToken = _tokenService.GenerateRefreshToken(request.IpAddress);
+      var refreshToken = _refreshTokenService.GenerateRefreshToken(request.IpAddress);
       
       // validate
       if (user == null)
@@ -47,12 +52,12 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
       {
         user.RefreshTokens.Add(refreshToken);
         
-        _tokenService.RemoveOldRefreshTokens(user);
+        _refreshTokenService.RemoveOldRefreshTokens(user);
         
         await _dbContext.UpdateAndSaveUser(user);
       }
 
-      var jwtToken = _tokenService.GenerateJwtToken(user);
+      var jwtToken = _jwtTokenService.GenerateJwtToken(user);
 
       return new AuthenticateResponseDto(user, jwtToken, refreshToken.Token);
     }

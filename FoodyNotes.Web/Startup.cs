@@ -33,7 +33,8 @@ namespace FoodyNotes.Web
       services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
       
       services.AddScoped<IUserService, UserService>();
-      services.AddScoped<ITokenService, TokenService>();
+      services.AddScoped<IJwtTokenService, JwtTokenService>();
+      services.AddScoped<IRefreshTokenService, RefreshTokenService>();
       services.AddScoped<IGoogleService, GoogleService>();
       services.AddScoped<HttpService>();
 

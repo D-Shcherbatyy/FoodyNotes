@@ -12,25 +12,24 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
   public class RevokeTokenCommandHandler : AsyncRequestHandler<RevokeTokenCommand>
   {
     private readonly IDbContext _dbContext;
-    private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
 
-    public RevokeTokenCommandHandler(IDbContext dbContext, ITokenService tokenService)
+    public RevokeTokenCommandHandler(IDbContext dbContext, IRefreshTokenService refreshTokenService)
     {
       _dbContext = dbContext;
-      _tokenService = tokenService;
-
+      _refreshTokenService = refreshTokenService;
     }
 
     protected override async Task Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
     {
-      var user = _tokenService.GetUserByRefreshToken(request.RefreshToken);
+      var user = _refreshTokenService.GetUserByRefreshToken(request.RefreshToken);
       var refreshToken = user.RefreshTokens.Single(x => x.Token == request.RefreshToken);
 
       if (!refreshToken.IsActive)
         throw new AppException("Invalid token");
 
       // revoke token and save
-      _tokenService.RevokeRefreshToken(refreshToken, request.IpAddress, "Revoked without replacement");
+      _refreshTokenService.RevokeRefreshToken(refreshToken, request.IpAddress, "Revoked without replacement");
       
       await _dbContext.UpdateAndSaveUser(user);
     }
