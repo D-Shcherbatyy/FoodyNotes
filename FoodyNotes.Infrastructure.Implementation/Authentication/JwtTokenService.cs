@@ -4,12 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FoodyNotes.Entities.Authentication.Entities;
-using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FoodyNotes.Infrastructure.Implementation
+namespace FoodyNotes.Infrastructure.Implementation.Authentication
 {
   public class JwtTokenService : IJwtTokenService
   {

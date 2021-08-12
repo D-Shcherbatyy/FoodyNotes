@@ -4,7 +4,7 @@ using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 
-namespace FoodyNotes.UseCases
+namespace FoodyNotes.Infrastructure.Implementation
 {
   public class UserService : IUserService
   {

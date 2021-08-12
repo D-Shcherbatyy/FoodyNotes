@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

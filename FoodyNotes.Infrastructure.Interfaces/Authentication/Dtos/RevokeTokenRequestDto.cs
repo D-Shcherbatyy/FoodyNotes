@@ -1,4 +1,4 @@
-namespace FoodyNotes.Web.Models
+namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
 {
   public class RevokeTokenRequestDto
   {

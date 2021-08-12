@@ -31,6 +31,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
 
       if (refreshToken.IsRevoked)
       {
+        // ALARM! ALARM!
         // revoke all descendant tokens in case this token has been compromised
         _refreshTokenService.RevokeDescendantRefreshTokens(refreshToken, user, request.IpAddress, $"Attempted reuse of revoked ancestor token: {request.CurrentRefreshToken}");
         

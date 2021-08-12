@@ -7,7 +7,7 @@ using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases.Exceptions;
 using Microsoft.Extensions.Options;
 
-namespace FoodyNotes.Infrastructure.Implementation
+namespace FoodyNotes.Infrastructure.Implementation.Authentication
 {
   public class RefreshTokenService : IRefreshTokenService
   {

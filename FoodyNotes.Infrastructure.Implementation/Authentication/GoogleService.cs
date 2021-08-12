@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using Google.Apis.Auth;
 
-namespace FoodyNotes.Infrastructure.Implementation
+namespace FoodyNotes.Infrastructure.Implementation.Authentication
 {
   public class GoogleService : IGoogleService
   {

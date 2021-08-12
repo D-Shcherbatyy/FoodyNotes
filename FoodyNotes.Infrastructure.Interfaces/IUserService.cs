@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FoodyNotes.Entities.Authentication.Entities;
 
-namespace FoodyNotes.UseCases
+namespace FoodyNotes.Infrastructure.Interfaces
 {
   public interface IUserService
   {

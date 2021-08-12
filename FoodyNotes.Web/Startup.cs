@@ -1,5 +1,6 @@
 using FoodyNotes.DataAccess.MsSql;
 using FoodyNotes.Infrastructure.Implementation;
+using FoodyNotes.Infrastructure.Implementation.Authentication;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases;

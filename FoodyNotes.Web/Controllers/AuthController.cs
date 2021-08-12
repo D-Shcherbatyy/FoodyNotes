@@ -3,7 +3,6 @@ using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.Web.Attributes;
-using FoodyNotes.Web.Models;
 using FoodyNotes.Web.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

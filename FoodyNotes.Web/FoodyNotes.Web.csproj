@@ -18,8 +18,4 @@
         <ProjectReference Include="..\FoodyNotes.UseCases\FoodyNotes.UseCases.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Models" />
-    </ItemGroup>
-
 </Project>
