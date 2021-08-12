@@ -3,6 +3,7 @@ using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Implementation.Authentication;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
+using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.UseCases;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.Web.Middlewares;
@@ -40,6 +41,8 @@ namespace FoodyNotes.Web
       services.AddScoped<HttpService>();
 
       services.AddMediatR(typeof(AuthenticateCommand));
+
+      services.AddTransient(typeof(IPipelineBehavior<AuthenticateCommand,AuthenticateResponseDto>), typeof(TestPipelineBehavior));
       
       services.AddControllers();
 
@@ -70,7 +73,8 @@ namespace FoodyNotes.Web
         .AllowCredentials());
 
       //app.UseAuthorization(); - our authorization is based on IAuthorizationFilter
-      app.UseJwtMiddleware();
+      app.UseMiddleware<ErrorHandlerMiddleware>();
+      app.UseMiddleware<JwtMiddleware>();
 
       app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }

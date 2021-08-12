@@ -30,13 +30,4 @@ namespace FoodyNotes.Web.Middlewares
       await _next(context);
     }
   }
-  
-  public static class JwtMiddlewareExtensions
-  {
-    public static IApplicationBuilder UseJwtMiddleware(this IApplicationBuilder builder)
-    {
-      return builder.UseMiddleware<JwtMiddleware>();
-    }
-  }
-
 }
