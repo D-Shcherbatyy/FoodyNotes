@@ -14,13 +14,11 @@ namespace FoodyNotes.Web.Controllers
   public class AuthController : ControllerBase
   {
     private readonly IMediator _mediator;
-    private readonly IJwtTokenService _jwtTokenService;
     private readonly HttpService _httpService;
 
-    public AuthController(IMediator mediator, IJwtTokenService jwtTokenService, HttpService httpService)
+    public AuthController(IMediator mediator, HttpService httpService)
     {
       _mediator = mediator;
-      _jwtTokenService = jwtTokenService;
       _httpService = httpService;
     }
     
@@ -53,7 +51,7 @@ namespace FoodyNotes.Web.Controllers
     public async Task<IActionResult> RevokeToken(RevokeTokenRequestDto model)
     {
       // accept refresh token in request body or cookie
-      var refreshToken = model.Token ?? Request.Cookies["refreshToken"];
+      var refreshToken = model.RefreshToken ?? Request.Cookies["refreshToken"];
 
       if (string.IsNullOrEmpty(refreshToken))
         return BadRequest(new { message = "Token is required" });

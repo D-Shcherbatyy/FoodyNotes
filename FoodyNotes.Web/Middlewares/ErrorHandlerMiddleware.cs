@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FluentValidation;
 using FoodyNotes.UseCases.Exceptions;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace FoodyNotes.Web.Middlewares
         {
           case InvalidJwtException:
           case AppException:
+          case ValidationException:            
             // custom application error
             response.StatusCode = (int)HttpStatusCode.BadRequest;
             break;
@@ -46,7 +48,7 @@ namespace FoodyNotes.Web.Middlewares
             break;
         }
 
-        var result = JsonSerializer.Serialize(new { message = error?.Message });
+        var result = JsonSerializer.Serialize(new { message = error.Message });
         await response.WriteAsync(result);
       }
     }

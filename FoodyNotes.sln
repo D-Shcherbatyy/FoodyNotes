@@ -20,9 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 UseCases", "2 UseCases", "{0F3778D1-B276-4D36-A297-5790434872E6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Controllers", "3 Controllers", "{52178472-40B8-4E74-8A09-97FE9ABEA26B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Frameworks", "4 Frameworks", "{2351B5F1-3884-42F2-913F-BBED9B856270}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Frameworks", "3 Frameworks", "{2351B5F1-3884-42F2-913F-BBED9B856270}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

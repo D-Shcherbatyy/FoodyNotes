@@ -1,5 +1,4 @@
 using FoodyNotes.Infrastructure.Interfaces;
-using FoodyNotes.UseCases;
 using FoodyNotes.Web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 

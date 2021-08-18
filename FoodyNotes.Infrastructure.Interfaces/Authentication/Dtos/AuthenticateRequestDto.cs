@@ -4,7 +4,6 @@ namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
 {
   public class AuthenticateRequestDto
   {
-     [Required]
-     public string IdToken { get; set; }
+    public string IdToken { get; set; }
   }
 }

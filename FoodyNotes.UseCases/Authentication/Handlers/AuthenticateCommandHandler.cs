@@ -31,8 +31,6 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
     
     public async Task<AuthenticateResponseDto> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
     {
-      // return _authService.Authenticate(request.RequestDto, request.IpAddress);
-      
       var userId = await _googleService.GetUserIdByIdToken(request.RequestDto.IdToken);
       
       var user = _dbContext.Users.SingleOrDefault(x => x.Id == userId);

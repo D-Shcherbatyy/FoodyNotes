@@ -1,11 +1,13 @@
+using FluentValidation;
 using FoodyNotes.DataAccess.MsSql;
 using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Implementation.Authentication;
+using FoodyNotes.Infrastructure.Implementation.PipelineBehaviors;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
-using FoodyNotes.UseCases;
 using FoodyNotes.UseCases.Authentication.Commands;
+using FoodyNotes.UseCases.Validators;
 using FoodyNotes.Web.Middlewares;
 using FoodyNotes.Web.Services;
 using MediatR;
@@ -43,8 +45,13 @@ namespace FoodyNotes.Web
       services.AddMediatR(typeof(AuthenticateCommand));
 
       services.AddTransient(typeof(IPipelineBehavior<AuthenticateCommand,AuthenticateResponseDto>), typeof(TestPipelineBehavior));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TestGenericConstraintsPipelineBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+      
+      services.AddValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly);
       
       services.AddControllers();
+      //.AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly));
 
       services.AddSwaggerGen(c =>
       {
@@ -62,6 +69,8 @@ namespace FoodyNotes.Web
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FoodyNotes.Web v1"));
       }
 
+      app.UseMiddleware<ErrorHandlerMiddleware>();
+      
       app.UseHttpsRedirection();
 
       app.UseRouting();
@@ -73,7 +82,6 @@ namespace FoodyNotes.Web
         .AllowCredentials());
 
       //app.UseAuthorization(); - our authorization is based on IAuthorizationFilter
-      app.UseMiddleware<ErrorHandlerMiddleware>();
       app.UseMiddleware<JwtMiddleware>();
 
       app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
