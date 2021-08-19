@@ -37,7 +37,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
       
       var refreshToken = _refreshTokenService.GenerateRefreshToken(request.IpAddress);
       
-      // validate
+      // create user if it doesn't exist in db
       if (user == null)
       {
         user = new User { Id = userId, RefreshTokens = new List<RefreshToken> { refreshToken }};

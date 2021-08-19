@@ -1,4 +1,4 @@
-using FluentValidation;
+using FluentValidation.AspNetCore;
 using FoodyNotes.DataAccess.MsSql;
 using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Implementation.Authentication;
@@ -47,12 +47,10 @@ namespace FoodyNotes.Web
       services.AddTransient(typeof(IPipelineBehavior<AuthenticateCommand,AuthenticateResponseDto>), typeof(TestPipelineBehavior));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TestGenericConstraintsPipelineBehavior<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-      
-      services.AddValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly);
-      
-      services.AddControllers();
-      //.AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly));
 
+      services.AddControllers()
+        .AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly));
+      
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodyNotes.Web", Version = "v1" });

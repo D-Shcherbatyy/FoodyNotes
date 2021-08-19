@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.Web.Attributes;

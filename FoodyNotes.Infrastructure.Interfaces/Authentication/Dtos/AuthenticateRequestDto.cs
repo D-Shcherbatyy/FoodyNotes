@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos
 {
   public class AuthenticateRequestDto
