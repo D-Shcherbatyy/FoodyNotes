@@ -8,11 +8,14 @@ using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.UseCases.Validators;
+using FoodyNotes.UseCases.Validators.Dtos;
 using FoodyNotes.Web.Middlewares;
 using FoodyNotes.Web.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,6 +53,14 @@ namespace FoodyNotes.Web
 
       services.AddControllers()
         .AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(AuthenticateRequestDtoValidator).Assembly));
+
+      services.AddApiVersioning(options =>
+      {
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.DefaultApiVersion = ApiVersion.Default;
+        options.ApiVersionReader = new HeaderApiVersionReader("x-ms-version");
+        options.ReportApiVersions = true;
+      });
       
       services.AddSwaggerGen(c =>
       {
