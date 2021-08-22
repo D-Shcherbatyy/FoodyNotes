@@ -4,4 +4,18 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\FoodyNotes.Entities\FoodyNotes.Entities.csproj" />
+        <ProjectReference Include="..\FoodyNotes.Infrastructure.Interfaces\FoodyNotes.Infrastructure.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Authentication\Queries" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.0" />
+      <PackageReference Include="MediatR" Version="9.0.0" />
+    </ItemGroup>
+
 </Project>
