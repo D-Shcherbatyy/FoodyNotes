@@ -22,7 +22,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
 
     protected override async Task Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
     {
-      var user = _refreshTokenService.GetUserByRefreshToken(request.RefreshToken);
+      var user = await _refreshTokenService.GetUserByRefreshTokenAsync(request.RefreshToken);
       var refreshToken = user.RefreshTokens.Single(x => x.Token == request.RefreshToken);
 
       if (!refreshToken.IsActive)

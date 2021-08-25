@@ -34,7 +34,8 @@ namespace FoodyNotes.Web.Middlewares
         {
           case InvalidJwtException:
           case AppException:
-          case ValidationException:            
+          case ValidationException:
+          case ArgumentException when error.Source == "Google.Apis.Core":
             // custom application error
             response.StatusCode = (int)HttpStatusCode.BadRequest;
             break;

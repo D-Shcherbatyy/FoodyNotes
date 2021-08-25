@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.UseCases.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace FoodyNotes.Infrastructure.Implementation.Authentication
@@ -45,9 +47,9 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
         x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
     }
 
-    public User GetUserByRefreshToken(string token)
+    public async Task<User> GetUserByRefreshTokenAsync(string token)
     {
-      var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+      var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
       if (user == null)
         throw new AppException("Invalid token");

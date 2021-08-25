@@ -26,7 +26,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
     
     public async Task<RefreshTokenResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-      var user = _refreshTokenService.GetUserByRefreshToken(request.CurrentRefreshToken);
+      var user = await _refreshTokenService.GetUserByRefreshTokenAsync(request.CurrentRefreshToken);
       var refreshToken = user.RefreshTokens.Single(x => x.Token == request.CurrentRefreshToken);
 
       if (refreshToken.IsRevoked)
