@@ -49,6 +49,7 @@ namespace FoodyNotes.Web
 
       services.AddTransient(typeof(IPipelineBehavior<AuthenticateCommand,AuthenticateResponseDto>), typeof(TestPipelineBehavior));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TestGenericConstraintsPipelineBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehaviour<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
       services.AddControllers()
