@@ -1,5 +1,5 @@
 using FluentValidation.AspNetCore;
-using FoodyNotes.DataAccess.MsSql;
+using FoodyNotes.DataAccess.Postgres;
 using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Implementation.Authentication;
 using FoodyNotes.Infrastructure.Implementation.PipelineBehaviors;
@@ -7,7 +7,6 @@ using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.UseCases.Authentication.Commands;
-using FoodyNotes.UseCases.Validators;
 using FoodyNotes.UseCases.Validators.Dtos;
 using FoodyNotes.Web.Middlewares;
 using FoodyNotes.Web.Services;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +34,8 @@ namespace FoodyNotes.Web
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<IDbContext, ApplicationDbContext>();
+      services.AddDbContext<IDbContext, ApplicationDbContext>(options => 
+        options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
       services.AddCors();
 
       services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));

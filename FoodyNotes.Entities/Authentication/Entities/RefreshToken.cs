@@ -1,11 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodyNotes.Entities.Authentication.Entities
 {
-  [Owned]
   public class RefreshToken
   {
     [Key]
