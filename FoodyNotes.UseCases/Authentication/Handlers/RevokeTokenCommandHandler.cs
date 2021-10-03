@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
+using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.UseCases.Exceptions;
 using MediatR;
@@ -11,12 +13,12 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
 {
   public class RevokeTokenCommandHandler : AsyncRequestHandler<RevokeTokenCommand>
   {
-    private readonly IDbContext _dbContext;
+    private readonly IRepositoryBase<User, string> _userRepo;
     private readonly IRefreshTokenService _refreshTokenService;
 
-    public RevokeTokenCommandHandler(IDbContext dbContext, IRefreshTokenService refreshTokenService)
+    public RevokeTokenCommandHandler(IRepositoryBase<User, string> userRepo, IRefreshTokenService refreshTokenService)
     {
-      _dbContext = dbContext;
+      _userRepo = userRepo;
       _refreshTokenService = refreshTokenService;
     }
 
@@ -31,7 +33,9 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
       // revoke token and save
       _refreshTokenService.RevokeRefreshToken(refreshToken, request.IpAddress, "Revoked without replacement");
       
-      await _dbContext.UpdateAndSaveUser(user);
+      _userRepo.Update(user);
+      
+      await _userRepo.SaveChangesAsync(cancellationToken);
     }
   }
 }

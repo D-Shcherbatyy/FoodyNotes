@@ -4,12 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace FoodyNotes.Entities.Authentication.Entities
 {
-  public class RefreshToken
+  public class RefreshToken : Entity<int>
   {
-    [Key]
-    [JsonIgnore]
-    public int Id { get; set; }
-
     public string Token { get; set; }
     public DateTime Expires { get; set; }
     public DateTime Created { get; set; }
@@ -21,5 +17,9 @@ namespace FoodyNotes.Entities.Authentication.Entities
     public bool IsExpired => DateTime.UtcNow >= Expires;
     public bool IsRevoked => Revoked != null;
     public bool IsActive => !IsRevoked && !IsExpired;
+
+    public string UserId { get; set; }
+
+    public User User { get; set; }
   }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Web.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace FoodyNotes.Web.Controllers
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-      var users = _userService.GetAll();
+      var users = await _userService.GetAllAsync();
 
       return Ok(users);
     }

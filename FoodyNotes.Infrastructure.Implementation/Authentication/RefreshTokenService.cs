@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
+using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -13,13 +14,13 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
 {
   public class RefreshTokenService : IRefreshTokenService
   {
+    private readonly IRepositoryBase<User, string> _userRepo;
     private readonly AppSettings _appSettings;
-    private readonly IDbContext _context;
 
-    public RefreshTokenService(IOptions<AppSettings> appSettings, IDbContext context)
+    public RefreshTokenService(IOptions<AppSettings> appSettings, IRepositoryBase<User, string> userRepo)
     {
+      _userRepo = userRepo;
       _appSettings = appSettings.Value;
-      _context = context;
     }
 
     public RefreshToken GenerateRefreshToken(string ipAddress)
@@ -49,8 +50,9 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
 
     public async Task<User> GetUserByRefreshTokenAsync(string token)
     {
-      var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-
+      var users = await _userRepo.GetAllAsync();
+      var user = users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+      
       if (user == null)
         throw new AppException("Invalid token");
 
