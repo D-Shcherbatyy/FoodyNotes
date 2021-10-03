@@ -24,7 +24,7 @@ namespace FoodyNotes.DataAccess.Postgres
 
     public async Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken)
     {
-      return await _dbContext.Set<TEntity>().FirstAsync(x => x.Id.Equals(id), cancellationToken);
+      return await _dbContext.Set<TEntity>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
     public Task<IEnumerable<TEntity>> GetRangeByIdsAsync(IEnumerable<TId> ids, CancellationToken cancellationToken)
