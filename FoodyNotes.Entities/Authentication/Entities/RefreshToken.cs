@@ -1,6 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodyNotes.Entities.Authentication.Entities
 {
@@ -17,9 +16,5 @@ namespace FoodyNotes.Entities.Authentication.Entities
     public bool IsExpired => DateTime.UtcNow >= Expires;
     public bool IsRevoked => Revoked != null;
     public bool IsActive => !IsRevoked && !IsExpired;
-
-    public string UserId { get; set; }
-
-    public User User { get; set; }
   }
 }

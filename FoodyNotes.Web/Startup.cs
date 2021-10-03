@@ -1,6 +1,5 @@
 using FluentValidation.AspNetCore;
 using FoodyNotes.DataAccess.Postgres;
-using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Implementation;
 using FoodyNotes.Infrastructure.Implementation.Authentication;
 using FoodyNotes.Infrastructure.Implementation.PipelineBehaviors;

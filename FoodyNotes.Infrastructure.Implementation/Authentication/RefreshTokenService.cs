@@ -3,11 +3,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
-using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace FoodyNotes.Infrastructure.Implementation.Authentication

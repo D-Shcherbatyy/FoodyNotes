@@ -1,19 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using FluentAssertions;
 using FoodyNotes.Entities.Authentication.Entities;
-using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.UseCases.Authentication.Handlers;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 

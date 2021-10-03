@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
-using FoodyNotes.Infrastructure.Interfaces;
-using FoodyNotes.Infrastructure.Interfaces.Persistence;
+using FoodyNotes.Entities.Authentication.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodyNotes.DataAccess.Postgres
@@ -14,13 +12,15 @@ namespace FoodyNotes.DataAccess.Postgres
     }
     
     public DbSet<User> Users { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      modelBuilder.HasDefaultSchema("auth_schema");
+      // modelBuilder.HasPostgresEnum<Role>();
+      
       base.OnModelCreating(modelBuilder);
 
-      // modelBuilder.Entity<User>().OwnsMany(x => x.RefreshTokens);
+      modelBuilder.Entity<User>().OwnsMany(x => x.RefreshTokens);
     }
   }
 
