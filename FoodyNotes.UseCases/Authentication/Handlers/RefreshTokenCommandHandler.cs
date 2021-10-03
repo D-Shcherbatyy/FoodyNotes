@@ -1,9 +1,10 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodyNotes.Infrastructure.Interfaces;
+using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
 using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
+using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Authentication.Commands;
 using FoodyNotes.UseCases.Exceptions;
 using MediatR;
@@ -12,13 +13,13 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
 {
   public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, RefreshTokenResponseDto>
   {
-    private readonly IDbContext _dbContext;
+    private readonly IRepositoryBase<User, string> _userRepo;
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IRefreshTokenService _refreshTokenService;
 
-    public RefreshTokenCommandHandler(IDbContext dbContext, IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
+    public RefreshTokenCommandHandler(IRepositoryBase<User, string> userRepo, IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
     {
-      _dbContext = dbContext;
+      _userRepo = userRepo;
       _jwtTokenService = jwtTokenService;
       _refreshTokenService = refreshTokenService;
 
@@ -35,7 +36,8 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
         // revoke all descendant tokens in case this token has been compromised
         _refreshTokenService.RevokeDescendantRefreshTokens(refreshToken, user, request.IpAddress, $"Attempted reuse of revoked ancestor token: {request.CurrentRefreshToken}");
         
-        await _dbContext.UpdateAndSaveUser(user);
+        _userRepo.Update(user);
+        await _userRepo.SaveChangesAsync(cancellationToken);
       }
 
       if (!refreshToken.IsActive)
@@ -49,7 +51,8 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
       _refreshTokenService.RemoveOldRefreshTokens(user);
 
       // save changes to db
-      await _dbContext.UpdateAndSaveUser(user);
+      _userRepo.Update(user);
+      await _userRepo.SaveChangesAsync(cancellationToken);
 
       // generate new jwt
       var jwtToken = _jwtTokenService.GenerateJwtToken(user);

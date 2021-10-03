@@ -1,26 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
 using FoodyNotes.Infrastructure.Interfaces;
 using FoodyNotes.Infrastructure.Interfaces.Authentication;
+using FoodyNotes.Infrastructure.Interfaces.Persistence;
 
 namespace FoodyNotes.Infrastructure.Implementation
 {
   public class UserService : IUserService
   {
-    private readonly IDbContext _context;
+    private readonly IRepositoryBase<User, string> _userRepo;
     private readonly IJwtTokenService _jwtTokenService;
 
-    public UserService(IDbContext context, IJwtTokenService jwtTokenService)
+    public UserService(IRepositoryBase<User, string> userRepo, IJwtTokenService jwtTokenService)
     {
-      _context = context;
+      _userRepo = userRepo;
       _jwtTokenService = jwtTokenService;
 
     }
 
-    public User GetById(string id)
+    public async Task<User> GetByIdAsync(string id)
     {
-      var user = _context.Users.Find(id);
+      var user = await _userRepo.GetByIdAsync(id);
 
       if (user == null)
         throw new KeyNotFoundException("User not found");
@@ -28,9 +30,9 @@ namespace FoodyNotes.Infrastructure.Implementation
       return user;
     }
 
-    public IEnumerable<User> GetAll()
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
-      return _context.Users;
+      return await _userRepo.GetAllAsync();
     }
 
     public string GetUserIdFromJwtToken(string token)

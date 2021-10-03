@@ -1,35 +1,26 @@
-using System.Threading.Tasks;
 using FoodyNotes.Entities.Authentication.Entities;
-using FoodyNotes.Infrastructure.Interfaces;
+using FoodyNotes.Entities.Authentication.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodyNotes.DataAccess.MsSql
+namespace FoodyNotes.DataAccess.Postgres
 {
-  public class ApplicationDbContext : DbContext, IDbContext
+  public class ApplicationDbContext : DbContext
   {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+      : base(options)
+    {
+    }
+    
     public DbSet<User> Users { get; set; }
-    public Task<int> UpdateAndSaveUser(User user)
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      Update(user);
+      modelBuilder.HasDefaultSchema("auth_schema");
+      // modelBuilder.HasPostgresEnum<Role>();
       
-      return SaveChangesAsync();
-    }
+      base.OnModelCreating(modelBuilder);
 
-    Task<int> IDbContext.SaveChangesAsync()
-    {
-     return SaveChangesAsync();
-    }
-
-    public ApplicationDbContext()
-    {
-
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-      base.OnConfiguring(optionsBuilder);
-
-      optionsBuilder.UseInMemoryDatabase("TestDb");
+      modelBuilder.Entity<User>().OwnsMany(x => x.RefreshTokens);
     }
   }
 

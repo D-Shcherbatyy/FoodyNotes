@@ -22,7 +22,7 @@ namespace FoodyNotes.Web.Middlewares
       if (userId != null)
       {
         // attach user to context on successful jwt validation
-        context.Items["User"] = userService.GetById(userId);
+        context.Items["User"] = await userService.GetByIdAsync(userId);
       }
 
       await _next(context);

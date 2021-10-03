@@ -4,6 +4,6 @@ namespace FoodyNotes.Infrastructure.Interfaces.Authentication
 {
   public interface IGoogleService
   {
-    Task<string> GetUserIdByIdToken(string idToken);
+    Task<string> GetUserIdByIdTokenAsync(string idToken);
   }
 }

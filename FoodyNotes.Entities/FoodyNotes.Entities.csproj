@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.7" />
+      <Folder Include="Authentication" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Authentication" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.10" />
     </ItemGroup>
 
 </Project>

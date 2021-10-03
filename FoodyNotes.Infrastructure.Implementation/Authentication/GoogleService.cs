@@ -6,7 +6,7 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
 {
   public class GoogleService : IGoogleService
   {
-    public async Task<string> GetUserIdByIdToken(string idToken)
+    public async Task<string> GetUserIdByIdTokenAsync(string idToken)
     {
       var payload = await ValidateIdToken(idToken);
 
