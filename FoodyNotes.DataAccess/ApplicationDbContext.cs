@@ -11,7 +11,9 @@ namespace FoodyNotes.DataAccess.Postgres
     {
     }
     
+#pragma warning disable 108,114
     public DbSet<User> Users { get; set; }
+#pragma warning restore 108,114
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

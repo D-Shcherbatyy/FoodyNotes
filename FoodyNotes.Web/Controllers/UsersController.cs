@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodyNotes.Web.Controllers
 {
 
-  [Authorize]
+  // [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class UsersController : ControllerBase

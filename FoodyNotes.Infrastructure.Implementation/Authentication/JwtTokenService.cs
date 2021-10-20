@@ -21,8 +21,6 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
 
     public string GenerateJwtToken(User user)
     {
-      // generate token that is valid for 15 minutes
-      var tokenHandler = new JwtSecurityTokenHandler();
       var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
       var tokenDescriptor = new SecurityTokenDescriptor
       {
@@ -30,6 +28,7 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
         Expires = DateTime.UtcNow.AddMinutes(15),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
       };
+      var tokenHandler = new JwtSecurityTokenHandler();
       var token = tokenHandler.CreateToken(tokenDescriptor);
 
       return tokenHandler.WriteToken(token);

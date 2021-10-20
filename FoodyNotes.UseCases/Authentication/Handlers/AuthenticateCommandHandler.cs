@@ -32,8 +32,7 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
     {
       var userId = await _googleService.GetUserIdByIdTokenAsync(request.RequestDto.IdToken);
       var user = await _userRepo.GetByIdAsync(userId, cancellationToken);
-      // var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
-      
+
       var refreshToken = _refreshTokenService.GenerateRefreshToken(request.IpAddress);
       
       // create user if it doesn't exist in db
@@ -43,8 +42,6 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
 
         await _userRepo.AddAsync(user, cancellationToken);
         await _userRepo.SaveChangesAsync(cancellationToken);
-        // await _dbContext.Users.AddAsync(user, cancellationToken);
-        // await _dbContext.SaveChangesAsync();
       }
       else
       {
@@ -53,7 +50,6 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
         _refreshTokenService.RemoveOldRefreshTokens(user);
 
         await _userRepo.SaveChangesAsync(cancellationToken);
-        // await _dbContext.UpdateAndSaveUser(user);
       }
 
       var jwtToken = _jwtTokenService.GenerateJwtToken(user);

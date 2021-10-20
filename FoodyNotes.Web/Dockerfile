@@ -9,7 +9,7 @@ COPY FoodyNotes.Entities/*.csproj ./FoodyNotes.Entities/
 COPY FoodyNotes.Infrastructure.Implementation/*.csproj ./FoodyNotes.Infrastructure.Implementation/ 
 COPY FoodyNotes.Infrastructure.Interfaces/*.csproj ./FoodyNotes.Infrastructure.Interfaces/ 
 COPY FoodyNotes.UseCases/*.csproj ./FoodyNotes.UseCases/
-COPY FoodyNotes.UseCases.UnitTest/*.csproj ./FoodyNotes.UseCases.UnitTest/ 
+COPY FoodyNotes.UseCases.UnitTests/*.csproj ./FoodyNotes.UseCases.UnitTests/ 
 COPY FoodyNotes.Utils/*.csproj ./FoodyNotes.Utils/
 RUN dotnet restore
 
@@ -20,6 +20,7 @@ COPY FoodyNotes.Entities/. ./FoodyNotes.Entities/
 COPY FoodyNotes.Infrastructure.Implementation/ ./FoodyNotes.Infrastructure.Implementation/ 
 COPY FoodyNotes.Infrastructure.Interfaces/ ./FoodyNotes.Infrastructure.Interfaces/ 
 COPY FoodyNotes.UseCases/. ./FoodyNotes.UseCases/ 
+COPY FoodyNotes.UseCases.UnitTests/. ./FoodyNotes.UseCases.UnitTests/
 COPY FoodyNotes.Utils/. ./FoodyNotes.Utils/
 
 WORKDIR /app/FoodyNotes.Web
@@ -27,6 +28,7 @@ RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app
+EXPOSE 80
 
 COPY --from=build /app/FoodyNotes.Web/out ./
 ENTRYPOINT ["dotnet", "FoodyNotes.Web.dll"]
