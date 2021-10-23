@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Authentication.Infrastructure.Implementation</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Authentication.DataAccess\Authentication.DataAccess.csproj" />
+        <ProjectReference Include="..\Authentication.Infrastructure.Interfaces\Authentication.Infrastructure.Interfaces.csproj" />
+        <ProjectReference Include="..\Authentication.UseCases\Authentication.UseCases.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Apis.Auth" Version="1.52.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Authentication.Infrastructure.Interfaces</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Authentication.Entities\Authentication.Entities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="IDbContext.cs" />
+    </ItemGroup>
+
+</Project>

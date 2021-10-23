@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Authentication.UseCases</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Authentication.Entities\Authentication.Entities.csproj" />
+        <ProjectReference Include="..\Authentication.Infrastructure.Interfaces\Authentication.Infrastructure.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Authentication\Queries" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.0" />
+      <PackageReference Include="MediatR" Version="9.0.0" />
+    </ItemGroup>
+
+</Project>

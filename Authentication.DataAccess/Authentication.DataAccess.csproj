@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Authentication.DataAccess.Postgres</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Authentication.Entities\Authentication.Entities.csproj" />
+        <ProjectReference Include="..\Authentication.Infrastructure.Interfaces\Authentication.Infrastructure.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
+    </ItemGroup>
+
+</Project>
