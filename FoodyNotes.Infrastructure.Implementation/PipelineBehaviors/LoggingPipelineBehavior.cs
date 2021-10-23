@@ -18,7 +18,7 @@ namespace FoodyNotes.Infrastructure.Implementation.PipelineBehaviors
     }
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-      _logger.LogInformation($"Handling {typeof(TRequest).Name}");
+      _logger.LogInformation("Handling @{request}", request);
 
       foreach (var prop in request.GetType().GetProperties())
       {
@@ -27,7 +27,7 @@ namespace FoodyNotes.Infrastructure.Implementation.PipelineBehaviors
 
       var response = await next();
       
-      _logger.LogInformation($"Handled {typeof(TResponse).Name}");
+      _logger.LogInformation("Handled @{response}", response);
       
       return response;
     }

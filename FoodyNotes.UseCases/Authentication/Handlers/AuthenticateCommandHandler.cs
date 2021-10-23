@@ -7,6 +7,7 @@ using FoodyNotes.Infrastructure.Interfaces.Authentication.Dtos;
 using FoodyNotes.Infrastructure.Interfaces.Persistence;
 using FoodyNotes.UseCases.Authentication.Commands;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace FoodyNotes.UseCases.Authentication.Handlers
 {
@@ -16,29 +17,32 @@ namespace FoodyNotes.UseCases.Authentication.Handlers
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly IGoogleService _googleService;
+    private readonly ILogger<AuthenticateCommandHandler> _logger;
 
     public AuthenticateCommandHandler(IRepositoryBase<User, string> userRepo,
       IJwtTokenService jwtTokenService,
       IRefreshTokenService refreshTokenService,
-      IGoogleService googleService)
+      IGoogleService googleService,
+      ILogger<AuthenticateCommandHandler> logger)
     {
       _userRepo = userRepo;
       _jwtTokenService = jwtTokenService;
       _refreshTokenService = refreshTokenService;
       _googleService = googleService;
+      _logger = logger;
     }
     
     public async Task<AuthenticateResponseDto> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
     {
-      var userId = await _googleService.GetUserIdByIdTokenAsync(request.RequestDto.IdToken);
-      var user = await _userRepo.GetByIdAsync(userId, cancellationToken);
+      var userIdFromGoogle = await _googleService.GetUserIdByIdTokenAsync(request.RequestDto.IdToken);
+      var user = await _userRepo.GetByIdAsync(userIdFromGoogle, cancellationToken);
 
       var refreshToken = _refreshTokenService.GenerateRefreshToken(request.IpAddress);
       
       // create user if it doesn't exist in db
       if (user == null)
       {
-        user = new User { Id = userId, RefreshTokens = new List<RefreshToken> { refreshToken }};
+        user = new User { Id = userIdFromGoogle, RefreshTokens = new List<RefreshToken> { refreshToken }};
 
         await _userRepo.AddAsync(user, cancellationToken);
         await _userRepo.SaveChangesAsync(cancellationToken);

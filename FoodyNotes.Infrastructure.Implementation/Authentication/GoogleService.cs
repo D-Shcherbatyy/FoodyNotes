@@ -17,7 +17,7 @@ namespace FoodyNotes.Infrastructure.Implementation.Authentication
     {
       var settings = new GoogleJsonWebSignature.ValidationSettings
       {
-        Audience = new[] { "674537541571-4q73096qq9tj9fimnuehdeefl5po6n0f.apps.googleusercontent.com" }
+        Audience = new[] { "674537541571-4q73096qq9tj9fimnuehdeefl5po6n0f.apps.googleusercontent.com" } // todo: move to env
       };
 
       return await GoogleJsonWebSignature.ValidateAsync(idToken, settings);

@@ -7,16 +7,19 @@ using FluentValidation;
 using FoodyNotes.UseCases.Exceptions;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace FoodyNotes.Web.Middlewares
 {
   public class ErrorHandlerMiddleware
   {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
-    public ErrorHandlerMiddleware(RequestDelegate next)
+    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
     {
       _next = next;
+      _logger = logger;
     }
 
     public async Task Invoke(HttpContext context)
@@ -32,19 +35,20 @@ namespace FoodyNotes.Web.Middlewares
 
         switch(error)
         {
+          case InvalidJwtException when error.Source == "Google.Apis.Auth":
+          case ArgumentException when error.Source == "Google.Apis.Core":
+            _logger.LogWarning("Exception from the library {errorSource} with the message {errorMessage}", error.Source, error.Message);
+            response.StatusCode = (int)HttpStatusCode.BadRequest;
+            break;
           case InvalidJwtException:
           case AppException:
           case ValidationException:
-          case ArgumentException when error.Source == "Google.Apis.Core":
-            // custom application error
             response.StatusCode = (int)HttpStatusCode.BadRequest;
             break;
           case KeyNotFoundException:
-            // not found error
             response.StatusCode = (int)HttpStatusCode.NotFound;
             break;
           default:
-            // unhandled error
             response.StatusCode = (int)HttpStatusCode.InternalServerError;
             break;
         }

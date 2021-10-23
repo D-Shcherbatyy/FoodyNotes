@@ -26,6 +26,8 @@ namespace FoodyNotes.Web.Controllers
     [HttpGet]
     public IActionResult Test()
     {
+      _logger.Log(LogLevel.Information, "----- Test");
+      
       var response = new
       {
         _environment.EnvironmentName,
