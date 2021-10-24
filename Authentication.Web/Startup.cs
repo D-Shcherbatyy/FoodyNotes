@@ -52,9 +52,7 @@ namespace Authentication.Web
       services.AddScoped<HttpService>();
 
       services.AddMediatR(typeof(AuthenticateCommand));
-
-      services.AddTransient(typeof(IPipelineBehavior<AuthenticateCommand,AuthenticateResponseDto>), typeof(TestPipelineBehavior));
-      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TestGenericConstraintsPipelineBehavior<,>));
+      
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehaviour<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
@@ -74,8 +72,7 @@ namespace Authentication.Web
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Authentication.Web", Version = "v1" });
       });
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
